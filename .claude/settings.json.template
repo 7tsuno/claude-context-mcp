@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__claude-context__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.transcript_path' | jq -n --arg path \"$(cat)\" '{\"transcript_path\": $path}' > .claude/session-config.json"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${PROJECT_ROOT}/scripts/fix-claude-jsonl/dist/fix-jsonl.js \"$(jq -r '.transcript_path')\""
+          }
+        ]
+      }
+    ]
+  }
+}
